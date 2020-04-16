@@ -39,7 +39,7 @@ uint32_t ser_conn_command_process(uint8_t * p_command, uint16_t command_len)
         err_code = ser_hal_transport_tx_pkt_alloc(&p_tx_buf, (uint16_t *)&tx_buf_len);
     }
     while (NRF_ERROR_NO_MEM == err_code);           //假如没有内存空间，卡屎
-    LOG_I("alloc tx len: %d\n" , tx_buf_len );
+    
     if (NRF_SUCCESS == err_code)
     {
         /* Create a new response packet. */

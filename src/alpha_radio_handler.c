@@ -83,9 +83,56 @@ void alpha_radio_init(void)
     Radio.Init(&RxTestEvents);      //初始化IO
     Radio.SetModem(MODEM_LORA);     //设置成lora模式
     Radio.Sleep();                  //进入睡眠模式
-
-    trace_debug("alpha radio init finish\n"); //
 }
+
+
+/**
+ * @brief 设置lora进入接收模式
+ */
+void alpha_radio_rx( alpha_rx_param_t  alpha_rx_param )
+{
+    Radio.SetChannel( alpha_rx_param.freq );
+    Radio.SetRxConfig(  alpha_rx_param.mode ,
+                        alpha_rx_param.bandwidth ,
+                        alpha_rx_param.datarate ,
+                        alpha_rx_param.coderate ,
+                        alpha_rx_param.bandwidthAfc,
+                        alpha_rx_param.preambleLen,
+                        alpha_rx_param.symbTimeout,
+                        alpha_rx_param.fixLen,
+                        alpha_rx_param.payloadLen,
+                        alpha_rx_param.crcOn,
+                        alpha_rx_param.FreqHopOn,
+                        alpha_rx_param.HopPeriod,
+                        alpha_rx_param.iqInverted,
+                        alpha_rx_param.rxContinuous );
+    Radio.Rx(0);
+    trace_debug("alpha_radio_rx ===>  \n"); //
+}
+
+/**
+ * @brief 设置lora进入发送模式
+ */
+void alpha_radio_tx( alpha_tx_param_t  alpha_tx_param )
+{
+    Radio.SetChannel( alpha_tx_param.freq );
+    Radio.SetTxConfig(  alpha_tx_param.mode, 
+                        alpha_tx_param.power, 
+                        alpha_tx_param.fdev, 
+                        alpha_tx_param.bandwidth,
+                        alpha_tx_param.datarate, 
+                        alpha_tx_param.coderate,
+                        alpha_tx_param.preambleLen, 
+                        alpha_tx_param.fixLen,
+                        alpha_tx_param.crcOn, 
+                        alpha_tx_param.FreqHopOn, 
+                        alpha_tx_param.HopPeriod, 
+                        alpha_tx_param.iqInverted, 
+                        alpha_tx_param.timeout);
+    Radio.Send( alpha_tx_param.p_tx_buff , alpha_tx_param.tx_buff_len );
+    trace_debug("alpha_radio_tx ===>  \n"); //
+}
+
 
 
 

@@ -299,7 +299,7 @@ static void ser_phy_uart_evt_callback(app_uart_evt_t * uart_evt)
     {
         return;
     }
-    LOG_I("underlying_event: %s\n" , phy_uart_event_log_str(uart_evt->evt_type) );
+    //LOG_I("underlying_event: %s\n" , phy_uart_event_log_str(uart_evt->evt_type) );
     switch (uart_evt->evt_type)
     {
         case APP_UART_COMMUNICATION_ERROR:
@@ -328,7 +328,7 @@ static void ser_phy_uart_evt_callback(app_uart_evt_t * uart_evt)
             }
 
             m_rx_byte = uart_evt->data.value;
-            LOG_I("m_rx_byte = 0x%02x\n",m_rx_byte);
+            //LOG_I("m_rx_byte = 0x%02x\n",m_rx_byte);
             ser_phy_uart_rx(m_rx_byte);
             break;
 
@@ -346,7 +346,6 @@ static void ser_phy_uart_evt_callback(app_uart_evt_t * uart_evt)
             {
                 if(NRF_ERROR_NOT_FOUND == app_uart_get(&m_rx_byte))         //一字节一字节的把fifo读完
                 {
-//                    LOG_I("fifo read done\n");
                     break;
                 }
                 LOG_I("m_rx_byte = 0x%02x\n",m_rx_byte);

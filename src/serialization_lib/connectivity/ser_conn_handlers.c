@@ -78,12 +78,14 @@ void ser_conn_hal_transport_event_handle(ser_hal_transport_evt_t event)
                    sizeof (ser_hal_transport_evt_rx_pkt_received_params_t));
             m_rx_pkt_to_process = true;         //开启数据包处理函数，解析数据包
 
-            LOG_I( "receive data length : %d ", event.evt_params.rx_pkt_received.num_of_bytes );
-            LOG_HEX_I( event.evt_params.rx_pkt_received.p_buffer , event.evt_params.rx_pkt_received.num_of_bytes );
-//            for ( uint16_t i = 0 ; i < event.evt_params.rx_pkt_received.num_of_bytes ; i++  )
-//            {
-//                LOG_I( "receive data length : %d ", event.evt_params.rx_pkt_received.num_of_bytes );
-//            }
+            LOG_I( "receive data length : %d\n", event.evt_params.rx_pkt_received.num_of_bytes );
+            LOG_I( "receive data command : 0x%02x\n", event.evt_params.rx_pkt_received.p_buffer[0] );
+            LOG_I( "item index : 0x%02x\n", event.evt_params.rx_pkt_received.p_buffer[1] );
+            if( (event.evt_params.rx_pkt_received.num_of_bytes-2) > 0 )
+            {
+                LOG_I( "vail data:");
+                LOG_HEX_I( event.evt_params.rx_pkt_received.p_buffer , (event.evt_params.rx_pkt_received.num_of_bytes-2) );
+            }
             break;
         }
 
