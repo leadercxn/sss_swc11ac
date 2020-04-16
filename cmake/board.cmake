@@ -1,0 +1,10 @@
+if(PLATFORM STREQUAL "nrf51822_xxAC")
+    set(BOARD "swc11xs" CACHE STRING "Board to build project.")
+    set_property(CACHE BOARD PROPERTY STRINGS "swc11xs")
+else()
+    message(FATAL_ERROR "Board for platform ${PLATFORM} not defined")
+endif()
+
+if(NOT EXISTS "${CMAKE_CONFIG_DIR}/board/${BOARD}.cmake")
+    message(FATAL_ERROR "Board not defined")
+endif()

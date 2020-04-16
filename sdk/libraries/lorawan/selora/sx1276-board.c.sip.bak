@@ -1,0 +1,262 @@
+/*
+ / _____)             _              | |
+( (____  _____ ____ _| |_ _____  ____| |__
+ \____ \| ___ |    (_   _) ___ |/ ___)  _ \
+ _____) ) ____| | | || |_| ____( (___| | | |
+(______/|_____)_|_|_| \__)_____)\____)_| |_|
+    (C)2013 Semtech
+
+Description: SX1276 driver specific target board functions implementation
+
+License: Revised BSD License, see LICENSE.TXT file include in the project
+
+Maintainer: Miguel Luis and Gregory Cristian
+*/
+#include <stdint.h>
+#include <string.h>
+#include "radio.h"
+#include "sx1276.h"
+#include "sx1276-board.h"
+
+#include "nrf_gpio.h"
+#include "app_error.h"
+
+#include "spi.h"
+#include "app_gpiote.h"
+
+#include "trace_uart.h"
+/*!
+ * Flag used to set the RF switch control pins in low power mode when the radio is not active.
+ */
+static bool RadioIsActive = false;
+
+static app_gpiote_user_id_t   m_dio_gpiote_user_id = 0xff;
+
+static DioIrqHandler *mp_irq_handler;
+
+
+                
+const struct Radio_s Radio =
+{
+    SX1276Init,
+    SX1276GetStatus,
+    SX1276SetModem,
+    SX1276SetChannel,
+    SX1276IsChannelFree,
+    SX1276Random,
+    SX1276SetRxConfig,
+    SX1276SetTxConfig,
+    SX1276CheckRfFrequency,
+    SX1276GetTimeOnAir,
+    SX1276Send,
+    SX1276SetSleep,
+    SX1276SetStby, 
+    SX1276SetRx,
+    SX1276StartCad,
+    SX1276ReadRssi,
+    SX1276OnTimeout,
+    SX1276Write,
+    SX1276Read,
+};
+
+void SX1276IoInit( void )
+{   
+    nrf_gpio_cfg_output(RADIO_RESET);
+    
+    nrf_gpio_cfg_input(RADIO_DIO_0, NRF_GPIO_PIN_PULLDOWN);
+    nrf_gpio_cfg_input(RADIO_DIO_1, NRF_GPIO_PIN_PULLDOWN);
+    nrf_gpio_cfg_input(RADIO_DIO_3, NRF_GPIO_PIN_PULLDOWN);
+#if 0    
+    nrf_gpio_cfg_input(RADIO_DIO_2, NRF_GPIO_PIN_PULLDOWN);
+    nrf_gpio_cfg_input(RADIO_DIO_4, NRF_GPIO_PIN_PULLDOWN);
+    nrf_gpio_cfg_input(RADIO_DIO_5, NRF_GPIO_PIN_PULLDOWN);
+#endif    
+}
+
+static void dio_gpiote_handler( uint32_t event_pins_low_to_high, uint32_t event_pins_high_to_low )
+{
+    if((event_pins_low_to_high & RADIO_DIO_0_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio0Irq();
+        mp_irq_handler[0]();
+    }
+    if((event_pins_low_to_high & RADIO_DIO_1_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio1Irq();
+        mp_irq_handler[1]();
+    }
+#if 0
+    if((event_pins_low_to_high & RADIO_DIO_2_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio2Irq();
+        mp_irq_handler[2]();
+    }
+#endif    
+    if((event_pins_low_to_high & RADIO_DIO_3_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio3Irq();
+        mp_irq_handler[3]();
+    }
+#if 0    
+    if((event_pins_low_to_high & RADIO_DIO_4_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio4Irq();
+        mp_irq_handler[4]();
+    
+    }
+    if((event_pins_low_to_high & RADIO_DIO_5_GPIOTE_EVT_MASK) != 0)
+    {
+//        SX1276OnDio5Irq();
+        mp_irq_handler[5]();
+    }
+#endif    
+}
+
+void SX1276IoIrqInit(DioIrqHandler *irqHandlers)
+{
+    uint32_t err_code;
+    
+    if(m_dio_gpiote_user_id == 0xff)
+    {        
+        mp_irq_handler = irqHandlers;
+        
+        uint32_t mask = RADIO_DIO_GPIOTE_EVT_MASK;
+        err_code = app_gpiote_user_register(&m_dio_gpiote_user_id,mask, NULL, dio_gpiote_handler);
+        APP_ERROR_CHECK(err_code);
+        
+        err_code = app_gpiote_user_enable(m_dio_gpiote_user_id);
+        APP_ERROR_CHECK(err_code);
+    }
+}
+
+#if 0
+void SX1276IoDeInit( void )
+{    
+    nrf_gpio_cfg_default(RADIO_RESET);
+    nrf_gpio_cfg_default(RADIO_DIO_0);
+    nrf_gpio_cfg_default(RADIO_DIO_1);
+    nrf_gpio_cfg_default(RADIO_DIO_3);
+
+#if 0    
+    nrf_gpio_cfg_default(RADIO_DIO_2);
+    nrf_gpio_cfg_default(RADIO_DIO_4);
+    nrf_gpio_cfg_default(RADIO_DIO_5);
+#endif
+}
+#endif
+
+uint8_t SX1276GetPaSelect( uint32_t channel )
+{
+    if( channel < RF_MID_BAND_THRESH )
+    {
+        return RF_PACONFIG_PASELECT_PABOOST;
+    }
+    else
+    {
+        // return RF_PACONFIG_PASELECT_RFO;
+        return RF_PACONFIG_PASELECT_PABOOST;
+    }
+}
+
+void SX1276AntSwInit( void )
+{
+    nrf_gpio_cfg_output(RADIO_ANT_TX);
+    nrf_gpio_cfg_output(RADIO_ANT_RX);
+    
+    nrf_gpio_pin_set(RADIO_ANT_TX);
+    nrf_gpio_pin_clear(RADIO_ANT_RX);    
+}
+
+void SX1276AntSwDeInit( void )
+{
+    nrf_gpio_cfg_default(RADIO_ANT_TX);
+    nrf_gpio_cfg_default(RADIO_ANT_RX);     
+}
+
+void SX1276SetAntSwLowPower( bool status )
+{
+    if( RadioIsActive != status )
+    {
+        RadioIsActive = status;
+    
+        if( status == false )
+        {
+            SX1276AntSwInit( );
+        }
+        else
+        {
+            SX1276AntSwDeInit( );
+        }
+    }
+}
+
+void SX1276SetAntSw( uint8_t rxTx )
+{
+    if( SX1276.RxTx == rxTx )
+    {
+        return;
+    }
+    SX1276.RxTx = rxTx;
+    if( rxTx != 0 ) // 1: TX, 0: RX
+    {
+        nrf_gpio_pin_clear(RADIO_ANT_TX);
+        nrf_gpio_pin_set(RADIO_ANT_RX); 
+    }
+    else
+    {
+        nrf_gpio_pin_set(RADIO_ANT_TX);
+        nrf_gpio_pin_clear(RADIO_ANT_RX);
+    }
+}
+
+void SX1276Reset( void )
+{
+    nrf_gpio_pin_clear(RADIO_RESET);
+    DelayMs( 1 );
+    nrf_gpio_cfg_input(RADIO_RESET, NRF_GPIO_PIN_NOPULL);
+    DelayMs( 6 );
+}
+
+void SX1276Write( uint8_t addr, uint8_t data )
+{
+    spi_write_buffer( addr, &data, 1 );
+}
+
+uint8_t SX1276Read( uint8_t addr )
+{
+    uint8_t data;
+    spi_read_buffer( addr, &data, 1 );
+    return data;
+}
+
+void SX1276WriteFifo( uint8_t *buffer, uint8_t size )
+{
+    spi_write_buffer( 0, buffer, size );
+}
+
+void SX1276ReadFifo( uint8_t *buffer, uint8_t size )
+{
+    spi_read_buffer( 0, buffer, size );
+}
+
+bool SX1276CheckRfFrequency( uint32_t frequency )
+{
+    // Implement check. Currently all frequencies are supported
+//    if(frequency != 0)
+//    {
+//        switch(RADIO_BAND)
+//        {
+//            case _BAND433:
+//                if(frequency > 435000000 || frequency < 433000000)
+//                {
+//                    return false;
+//                }
+//                break;
+//            
+//            default:
+//                break;
+//        }
+//    }
+    return true;
+}
+

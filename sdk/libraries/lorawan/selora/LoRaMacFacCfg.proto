@@ -1,0 +1,64 @@
+message DRRagne {
+    required uint32 drMin = 1;
+    required uint32 drMax = 2;
+}
+
+message Band {
+    required uint32 dutyCycle = 1;
+    required sint32 maxTxPower = 2;
+}
+
+message Channel {
+    optional uint32 frequency = 1;
+    required uint32 rx1Frequency = 2;
+    optional DRRagne drRange = 3;
+    optional uint32 bandIndex = 4;
+}
+
+enum Activation {
+    ABP = 0;
+    OTAA = 1;
+}
+
+enum ClassType {
+    A = 0;
+    B = 1;
+    C = 2;
+    G = 3;
+}
+
+message FacLoRaParam {
+    required bytes EUI = 1;
+    optional bytes appEUI = 2;
+    optional bytes netId = 3;
+    optional bytes appKey = 4;
+    optional bytes nwkSKey = 5;
+    optional bytes appSKey = 6;
+    optional bytes appNonce = 7;
+    optional bytes devNonce = 8;
+    optional bytes devAddr = 9;
+    repeated Channel channels = 10;
+    repeated Band bands = 11;
+    required bool adr = 12;
+    required sint32 txPower = 13;
+    required uint32 dataRate = 14;
+    required uint32 nbTrans = 15;
+    repeated sint32 channelMask = 16;
+    required uint32 maxDutyCycle = 17;
+    required uint32 rx1DRoffset = 18;
+    required uint32 rx2Frequency = 19;
+    required uint32 rx2DataRate = 20;
+    required uint32 delay = 21;
+    optional Channel pingSlotChannel = 22;
+    optional bool classBEnabled = 23;
+    optional uint32 pingPeriodicity = 24;
+    optional uint32 pingDataRate = 25;
+    optional uint32 beaconFrequency = 26;
+    optional uint32 beaconDataRate = 27;
+    optional Channel classGChannel = 28;
+    optional bool classGEnabled = 29;
+    optional uint32 classGPeriod = 30;
+    optional uint32 classGDataRate = 31;
+    optional Activation activation = 32;
+    optional ClassType classType = 33;
+}

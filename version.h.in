@@ -1,0 +1,8 @@
+#ifndef _VERSION_H_
+#define _VERSION_H_
+
+#define FW_VERSION          @PRJ_VERSION@
+#define FW_VERSION_BYTE     @PRJ_VERSION_BYTE@
+#define FW_VERSION_STR      @PRJ_VERSION_STRING@
+
+#endif

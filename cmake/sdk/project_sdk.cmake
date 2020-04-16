@@ -1,0 +1,62 @@
+set(PRJ_SDK_LPWAN_SOURCE_FILES
+    "${SDK_ROOT}/libraries/lorawan/openlora/Core/lora.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/LoRaMac.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/LoRaMacCrypto.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Crypto/cmac.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/sx1276/sx1276.c"
+    "${SDK_ROOT}/libraries/lorawan/sx127x_board/sx1276_board.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/Region.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionCommon.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionAS923.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionAU915-Hybrid.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionAU915.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionCN470.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionCN779.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionEU433.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionEU868.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionIN865.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionKR920.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionUS915.c"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region/RegionUS915-Hybrid.c"
+)
+
+set(PRJ_SDK_SOURCE_FILES
+    "${SDK_ROOT}/libraries/nrf51/ble_common/ble_handler.c"
+    "${SDK_ROOT}/libraries/nrf51/ble/ble_strm/ble_strm.c"
+    "${SDK_ROOT}/libraries/nrf51/ble/ble_strm/ble_strm_handler.c"
+    "${SDK_ROOT}/libraries/nrf51/nrf_list/nrf_sortlist.c"
+    "${SDK_ROOT}/libraries/nrf51/run_time/run_time.c"
+    "${SDK_ROOT}/libraries/nrf51/wdt/wdt.c"
+    "${SDK_ROOT}/libraries/nrf51/spi/spi.c"
+    "${SDK_ROOT}/libraries/crypto/aes_nrf51/aes_nrf51.c"
+    "${SDK_ROOT}/libraries/trace/trace.c"
+    "${SDK_ROOT}/libraries/util/util.c"
+    "${SDK_ROOT}/external/nanopb/pb_common.c"
+    "${SDK_ROOT}/external/nanopb/pb_decode.c"
+    "${SDK_ROOT}/external/nanopb/pb_encode.c"
+)
+
+set(PRJ_SDK_LPWAN_INCLUDE_DIRS
+    "${SDK_ROOT}/libraries/lorawan/openlora"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Core"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Crypto"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Mac/region"
+    "${SDK_ROOT}/libraries/lorawan/openlora/Phy"
+    "${SDK_ROOT}/libraries/lorawan/openlora/sx1276"
+    "${SDK_ROOT}/libraries/lorawan/sx127x_board"
+    "${SDK_ROOT}/libraries/lorawan/platform"
+)
+
+set(PRJ_SDK_INCLUDE_DIRS
+    "${SDK_ROOT}/libraries/nrf51/wdt"
+    "${SDK_ROOT}/libraries/nrf51/spi"
+    "${SDK_ROOT}/libraries/nrf51/ble"
+    "${SDK_ROOT}/libraries/nrf51/ble/ble_strm"
+    "${SDK_ROOT}/libraries/nrf51/ble_common"
+    "${SDK_ROOT}/libraries/nrf51/nrf_list"
+    "${SDK_ROOT}/libraries/nrf51/run_time"
+    "${SDK_ROOT}/libraries/util"
+    "${SDK_ROOT}/libraries/trace"
+    "${SDK_ROOT}/external/nanopb"
+)
