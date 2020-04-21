@@ -23,9 +23,7 @@ uint32_t conn_mw_alpha_alive_access(uint8_t const * const p_rx_buf,
 
     //解析rx数据包,并返回传参
 
-
     //处理函数
-
 
     //重新组织TX数据包数据结构
     err_code = alpha_alive_rsp_enc(err_code , p_tx_buf , p_tx_buf_len);
@@ -82,7 +80,10 @@ uint32_t conn_mw_alpha_open_rx( uint8_t const * const p_rx_buf,
     alpha_rx_param_t alpha_rx_param ;
 
     alpha_rx_param.mode = MODEM_LORA ;                                              //模式
+    alpha_rx_param.coderate = 1 ;
     alpha_rx_param.bandwidthAfc =  0 ; 
+    alpha_rx_param.preambleLen = 8 ;
+    alpha_rx_param.symbTimeout = 5 ;
     alpha_rx_param.fixLen = false ;
     alpha_rx_param.payloadLen = 0 ;
     alpha_rx_param.FreqHopOn = false ;
@@ -123,10 +124,12 @@ uint32_t conn_mw_alpha_open_tx( uint8_t const * const p_rx_buf,
 
     alpha_tx_param.mode = MODEM_LORA ;
     alpha_tx_param.fdev = 0 ;
+    alpha_tx_param.coderate = 1 ;
+    alpha_tx_param.preambleLen = 8 ;
     alpha_tx_param.fixLen = 0 ;
     alpha_tx_param.FreqHopOn = false ;
     alpha_tx_param.HopPeriod = 0 ;
-
+    alpha_tx_param.timeout = 3000000 ;
     //解析rx数据包,并返回传参
     alpha_open_tx_req_dec( p_rx_buf , rx_buf_len , &alpha_tx_param );
     

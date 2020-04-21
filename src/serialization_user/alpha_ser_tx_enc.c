@@ -35,7 +35,7 @@ uint32_t alpha_sleep_rsp_enc(uint32_t         return_code,
 {
     uint32_t index = 0;
 
-    return op_status_enc( ALPHA_CMD_SLEEP, return_code, p_buf, p_buf_len, &index );
+    return op_status_enc( ALPHA_CMD_LORA_SLEEP, return_code, p_buf, p_buf_len, &index );
 }
 
 /**
@@ -47,7 +47,7 @@ uint32_t alpha_open_rx_rsp_enc( uint32_t         return_code,
 {
     uint32_t index = 0;
 
-    return op_status_enc( ALPHA_CMD_OPEN_RX, return_code, p_buf, p_buf_len, &index );
+    return op_status_enc( ALPHA_CMD_LORA_OPEN_RX, return_code, p_buf, p_buf_len, &index );
 }
 
 /**
@@ -59,7 +59,7 @@ uint32_t alpha_open_tx_rsp_enc( uint32_t         return_code,
 {
     uint32_t index = 0;
 
-    return op_status_enc( ALPHA_CMD_OPEN_TX, return_code, p_buf, p_buf_len, &index );
+    return op_status_enc( ALPHA_CMD_LORA_OPEN_TX, return_code, p_buf, p_buf_len, &index );
 }
 
 

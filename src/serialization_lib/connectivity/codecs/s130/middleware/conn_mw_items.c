@@ -88,7 +88,7 @@ static const conn_mw_item_t conn_mw_item[] = {
     {SD_BLE_GATTS_SYS_ATTR_GET, conn_mw_ble_gatts_sys_attr_get},                            // 170
     //Functions form alpha
     {ALPHA_ALIVE_ACCESS, conn_mw_alpha_alive_access},                                       // 1
-    {ALPHA_CMD_SLEEP,conn_mw_alpha_sleep},                                                  // 2
-    {ALPHA_CMD_OPEN_RX,conn_mw_alpha_open_rx},                                              // 3
-    {ALPHA_CMD_OPEN_TX,conn_mw_alpha_open_tx},                                              // 4
+    {ALPHA_CMD_LORA_SLEEP,conn_mw_alpha_sleep},                                                  // 2
+    {ALPHA_CMD_LORA_OPEN_RX,conn_mw_alpha_open_rx},                                              // 3
+    {ALPHA_CMD_LORA_OPEN_TX,conn_mw_alpha_open_tx},                                              // 4
 };

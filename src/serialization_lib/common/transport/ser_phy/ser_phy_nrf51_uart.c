@@ -219,20 +219,23 @@ static void ser_phy_uart_tx(void)
         {
             callback_packet_sent();
             tx_done_flag = true;
+            LOG_I("send pkg finish\n" );
         }
         //First transmit 2 bytes of packet length
         else if (m_tx_stream_index < SER_PHY_HEADER_SIZE)                       //先发送TX数据包头
         {
-            err_code = app_uart_put(m_tx_length_buf[m_tx_stream_index]);        
+            err_code = app_uart_put(m_tx_length_buf[m_tx_stream_index]);   
+            LOG_I("0x%02x\n" , m_tx_length_buf[m_tx_stream_index] );     
         }
         //Then transmit payload
         else if (m_tx_stream_index < m_tx_stream_length)                        //再发送有效数据
         {
             err_code = app_uart_put(mp_tx_stream[m_tx_stream_index - SER_PHY_HEADER_SIZE]);
+            LOG_I("0x%02x\n" , mp_tx_stream[m_tx_stream_index - SER_PHY_HEADER_SIZE] );   
         }
 
         //Increment index only if byte was sent without errors
-        if ((err_code == NRF_SUCCESS) && !tx_done_flag)                         //一帧数据为发送
+        if ((err_code == NRF_SUCCESS) && !tx_done_flag)                         //一帧数据未发送
         {
             m_tx_stream_index++;
         }
@@ -423,6 +426,7 @@ uint32_t ser_phy_tx_pkt_send(const uint8_t * p_buffer, uint16_t num_of_bytes)
         m_tx_stream_length = num_of_bytes + SER_PHY_HEADER_SIZE;
 
         //Call tx procedure to start transmission of a packet
+        LOG_I("start tx pkg:\n");
         ser_phy_uart_tx();
     }
     else

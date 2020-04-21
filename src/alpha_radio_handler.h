@@ -49,8 +49,8 @@ typedef struct
     bool            iqInverted;     //反转的IQ信号
     uint32_t        timeout;        //超时
     uint32_t        freq;           //频点
-    uint16_t        tx_buff_len ;   //lora要发送数据的长度
-    uint8_t         *p_tx_buff;     //发射的数据缓冲区         
+    uint8_t         tx_buff_len ;   //lora要发送数据的长度
+    uint8_t         tx_buff[255];   //发射的数据缓冲区         
 } alpha_tx_param_t ;
 
 

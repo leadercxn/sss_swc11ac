@@ -19,8 +19,8 @@ uint32_t  alpha_open_rx_req_dec(uint8_t const * const           p_buf,
     uint32_t index = SER_CMD_DATA_POS;
     uint32_t err_code = NRF_SUCCESS;
 /**
-    |  Freq  |  BandWidth  |  DataRate(SF)  |  CodeRate  | PreambleLen | SymbTimeout | CrcOn | iqInverted |
-	|   4B   |     4B      |       4B       |     1B     |      2B     |      2B     |   1B  |      1B    |
+    |  Freq  |  BandWidth  |  DataRate(SF)  | CrcOn | iqInverted |
+	|   4B   |     4B      |       4B       |   1B  |      1B    |
 */
     err_code = uint32_t_dec(p_buf, packet_len, &index, (void *)( &alpha_rx_param->freq ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
@@ -30,7 +30,7 @@ uint32_t  alpha_open_rx_req_dec(uint8_t const * const           p_buf,
 
     err_code = uint32_t_dec(p_buf, packet_len, &index, (void *)( &alpha_rx_param->datarate ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
-
+#if 0
     err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &alpha_rx_param->coderate ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
@@ -39,7 +39,7 @@ uint32_t  alpha_open_rx_req_dec(uint8_t const * const           p_buf,
 
     err_code = uint16_t_dec(p_buf, packet_len, &index, (void *)( &alpha_rx_param->symbTimeout ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
-
+#endif
     err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &alpha_rx_param->crcOn ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
@@ -63,8 +63,8 @@ uint32_t  alpha_open_tx_req_dec(uint8_t const * const           p_buf,
     uint32_t index = SER_CMD_DATA_POS;
     uint32_t err_code = NRF_SUCCESS;
 /**
-    |  Freq  | Power | BandWidth | DataRate(SF) | CodeRate | PreambleLen | CrcOn | iqInverted | Timeout | txdata_len |	txbuff	|
-	|   4B   |  1B   |   4B      |     4B       |    1B    |     2B      |   1B  |     1B     |    4B   |	 2B		 |	 nB 	|
+    |  Freq  | Power | BandWidth | DataRate(SF) | CrcOn | iqInverted |  txdata_len |	txbuff	|
+	|   4B   |  1B   |   4B      |     4B       |   1B  |     1B     | 	   1B	   |	 nB 	|
  */
     err_code = uint32_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->freq ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
@@ -77,26 +77,16 @@ uint32_t  alpha_open_tx_req_dec(uint8_t const * const           p_buf,
     err_code = uint32_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->datarate ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
-    err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->coderate ));
-    SER_ASSERT(err_code == NRF_SUCCESS, err_code);
-
-    err_code = uint16_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->preambleLen ));
-    SER_ASSERT(err_code == NRF_SUCCESS, err_code);
-
     err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->crcOn ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
     err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->iqInverted ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
-    err_code = uint32_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->timeout ));
+    err_code = uint8_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->tx_buff_len ));
     SER_ASSERT(err_code == NRF_SUCCESS, err_code);
 
-    err_code = uint16_t_dec(p_buf, packet_len, &index, (void *)( &p_alpha_tx_param->tx_buff_len ));
-    SER_ASSERT(err_code == NRF_SUCCESS, err_code);
-
-    memset( p_alpha_tx_param->p_tx_buff , 0 , p_alpha_tx_param->tx_buff_len );
-    memcpy( p_alpha_tx_param->p_tx_buff , &p_buf[index] , p_alpha_tx_param->tx_buff_len );          //数据拷贝
+    memcpy( p_alpha_tx_param->tx_buff , &p_buf[index] , p_alpha_tx_param->tx_buff_len );          //数据拷贝
 
     index = index + p_alpha_tx_param->tx_buff_len ;
 

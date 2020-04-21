@@ -67,7 +67,7 @@
 /** UART transmission parameters */
 #define SER_PHY_UART_FLOW_CTRL          APP_UART_FLOW_CONTROL_DISABLED      //硬件流控制
 #define SER_PHY_UART_PARITY             false                               //奇偶校验
-#define SER_PHY_UART_BAUDRATE           UART_BAUDRATE_BAUDRATE_Baud2400     //波特率降下到2400,多字节通信才没问题，有点醉....
+#define SER_PHY_UART_BAUDRATE           UART_BAUDRATE_BAUDRATE_Baud9600     //波特率降下到2400,多字节通信才没问题，有点醉....
 
 /** Find UART baudrate value based on chosen register setting. */
 #if (SER_PHY_UART_BAUDRATE == UART_BAUDRATE_BAUDRATE_Baud1200)
